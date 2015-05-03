@@ -174,6 +174,11 @@ module.exports = yeoman.generators.Base.extend({
       );
 
       this.fs.copy(
+        this.templatePath('_cssvendor.json'),
+        this.destinationPath('cssvendor.json')
+      );
+
+      this.fs.copy(
         this.templatePath('splash.png'),
         this.destinationPath('resources/splash.png')
       );

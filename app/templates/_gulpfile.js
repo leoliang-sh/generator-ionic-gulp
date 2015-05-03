@@ -70,8 +70,12 @@ gulp.task('styles', function() {
   var sassStream = plugins.rubySass('app/styles/main.scss', options)
       .pipe(plugins.autoprefixer('last 1 Chrome version', 'last 3 iOS versions', 'last 3 Android versions'))
 
+  var cssVendorFiles=require("./cssvendor.json");
+
   var cssStream = gulp
-    .src('bower_components/ionic/css/ionic.min.css');
+    .src(cssVendorFiles)
+    .pipe(plugins.concat('vendor.css'))
+    .on('error',errorHandler);
 
   return streamqueue({ objectMode: true }, cssStream, sassStream)
     .pipe(plugins.concat('main.css'))
@@ -82,9 +86,10 @@ gulp.task('styles', function() {
 });
 
 
+
 // build templatecache, copy scripts.
 // if build: concat, minsafe, uglify and versionize
-gulp.task('scripts', function() {
+gulp.task('scripts',['json'] function() {
   var dest = path.join(targetDir, 'scripts');
 
   var minifyConfig = {
@@ -119,6 +124,13 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest(dest))
 
     .on('error', errorHandler);
+});
+
+//copy json
+gulp.task('json',function(){
+  return gulp.src('app/config/*.*')
+  .pipe(gulp.dest(path.join(targetDir,'config')))
+  .on('error',errorHandler);
 });
 
 // copy fonts
