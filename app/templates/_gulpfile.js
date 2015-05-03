@@ -89,7 +89,7 @@ gulp.task('styles', function() {
 
 // build templatecache, copy scripts.
 // if build: concat, minsafe, uglify and versionize
-gulp.task('scripts',['json'] function() {
+gulp.task('scripts',['json'],function() {
   var dest = path.join(targetDir, 'scripts');
 
   var minifyConfig = {
