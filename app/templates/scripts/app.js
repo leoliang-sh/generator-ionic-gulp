@@ -43,16 +43,6 @@ angular.module('<%= ngModulName %>', ['ionic', 'ngCordova', 'ngResource'])
             controller: 'HomeController'
           }
         }
-      })
-      .state('app.settings', {
-        url: '/settings',
-        cache: true,
-        views: {
-          'viewContent': {
-            templateUrl: 'templates/views/settings.html',
-            controller: 'SettingsController'
-          }
-        }
       });
 
 

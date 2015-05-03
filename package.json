@@ -1,14 +1,14 @@
 {
-  "name": "generator-ionic-gulp",
-  "version": "1.1.2",
-  "description": "A Yeoman generator for Ionic projects with gulp",
+  "name": "generator-my-ionic-gulp",
+  "version": "0.0.1",
+  "description": "my custom ionic generator with gulp",
   "license": "MIT",
   "main": "app/index.js",
-  "repository": "tmaximini/generator-ionic-gulp",
+  "repository": "leoliang-sh/generator-ionic-gulp",
   "author": {
-    "name": "Thomas Maximini",
-    "email": "tmaximini@gmail.com",
-    "url": "https://github.com/tmaximini"
+    "name": "Leo Liang",
+    "email": "leoliang_sh@163.com",
+    "url": "https://github.com/leoliang-sh"
   },
   "engines": {
     "node": ">=0.10.0"

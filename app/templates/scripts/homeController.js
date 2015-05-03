@@ -2,26 +2,13 @@
 
 /**
  * @ngdoc function
- * @name <%= ngModulName %>.controller:HomeController
+ * @name <%= ngModulName %>.controller:MainController
  * @description
  * # HomeController
  */
 angular.module('<%= ngModulName %>')
-  .controller('HomeController', function($scope, ExampleService) {
+  .controller('HomeController', function($scope) {
 
-    $scope.myHTML = null;
-
-    // just an example...
-    $scope.fetchRandomText = function() {
-      ExampleService.doSomethingAsync()
-        .then(ExampleService.fetchSomethingFromServer)
-        .then(function(response) {
-            $scope.myHTML = response.data.text;
-            // close pull to refresh loader
-            $scope.$broadcast('scroll.refreshComplete');
-        });
-    };
-
-    $scope.fetchRandomText();
+    // do something with $scope
 
   });
