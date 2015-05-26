@@ -1,6 +1,6 @@
 {
   "name": "generator-my-ionic-gulp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "my custom ionic generator with gulp",
   "license": "MIT",
   "main": "app/index.js",
