@@ -38,7 +38,7 @@ angular.module('<%= ngModulName %>', ['ionic', 'ngCordova', 'ngResource'])
         url: '/home',
         cache: true,
         views: {
-          'viewContent': {
+          'moduleView': {
             templateUrl: 'templates/views/home.html',
             controller: 'HomeController'
           }
