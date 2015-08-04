@@ -22,15 +22,18 @@ var ripple = require('ripple-emulator');
 var args = require('yargs')
     .alias('e', 'emulate')
     .alias('b', 'build')
+    .alias('d', 'debug')
     .alias('r', 'run')
     // remove all debug messages (console.logs, alerts etc) from release build
     .alias('release', 'strip-debug')
     .default('build', false)
     .default('port', 9000)
+    .default('debug',false)
     .default('strip-debug', false)
     .argv;
 
 var build = !!(args.build || args.emulate || args.run);
+var debug=args.debug;
 var emulate = args.emulate;
 var run = args.run;
 var port = args.port;
@@ -65,7 +68,7 @@ gulp.task('clean', function(done) {
 // precompile .scss and concat with ionic.css
 gulp.task('styles', function() {
 
-  var options = build ? { style: 'compressed' } : { style: 'expanded' };
+  var options = (build&&(!debug)) ? { style: 'compressed' } : { style: 'expanded' };
 
   var sassStream = plugins.rubySass('app/styles/main.scss', options)
       .pipe(plugins.autoprefixer('last 1 Chrome version', 'last 3 iOS versions', 'last 3 Android versions'))
@@ -77,12 +80,12 @@ gulp.task('styles', function() {
     .pipe(plugins.concat('vendor.css'))
     .on('error',errorHandler);
 
-  return streamqueue({ objectMode: true }, cssStream, sassStream)
-    .pipe(plugins.concat('main.css'))
-    .pipe(plugins.if(build, plugins.stripCssComments()))
-    .pipe(plugins.if(build && !emulate, plugins.rev()))
-    .pipe(gulp.dest(path.join(targetDir, 'styles')))
-    .on('error', errorHandler);
+    return streamqueue({ objectMode: true }, cssStream, sassStream)
+        .pipe(plugins.concat('main.css'))
+        .pipe(plugins.if(build&&(!debug), plugins.stripCssComments()))
+        .pipe(plugins.if(build&&(!debug) && !emulate, plugins.rev()))
+        .pipe(gulp.dest(path.join(targetDir, 'styles')))
+        .on('error', errorHandler);
 });
 
 
@@ -112,14 +115,14 @@ gulp.task('scripts',['json'],function() {
   var scriptStream = gulp
     .src(['templates.js', 'app.js', '**/*.js'], { cwd: 'app/scripts' })
 
-    .pipe(plugins.if(!build, plugins.changed(dest)));
+    .pipe(plugins.if(!(build&&(!debug)), plugins.changed(dest)));
 
   return streamqueue({ objectMode: true }, scriptStream, templateStream)
-    .pipe(plugins.if(build, plugins.ngAnnotate()))
+    .pipe(plugins.if(build&&(!debug), plugins.ngAnnotate()))
     .pipe(plugins.if(stripDebug, plugins.stripDebug()))
-    .pipe(plugins.if(build, plugins.concat('app.js')))
-    .pipe(plugins.if(build, plugins.uglify()))
-    .pipe(plugins.if(build && !emulate, plugins.rev()))
+    .pipe(plugins.if(build&&(!debug), plugins.concat('app.js')))
+    .pipe(plugins.if(build&&(!debug), plugins.uglify()))
+    .pipe(plugins.if((build&&(!debug))&& !emulate, plugins.rev()))
 
     .pipe(gulp.dest(dest))
 
@@ -136,7 +139,7 @@ gulp.task('json',function(){
 // copy fonts
 gulp.task('fonts', function() {
   return gulp
-    .src(['app/fonts/*.*', 'bower_components/ionic/fonts/*.*'])
+    .src(['app/fonts/*.*', 'bower_components/ionic/release/fonts/*.*'])
 
     .pipe(gulp.dest(path.join(targetDir, 'fonts')))
 
@@ -234,7 +237,7 @@ gulp.task('index', ['jsHint', 'scripts'], function() {
     // inject vendor.js
     .pipe(_inject(gulp.src('vendor*.js', { cwd: targetDir }), 'vendor'))
     // inject app.js (build) or all js files indivually (dev)
-    .pipe(plugins.if(build,
+    .pipe(plugins.if(build&&(!debug),
       _inject(gulp.src('scripts/app*.js', { cwd: targetDir }), 'app'),
       _inject(_getAllScriptSources(), 'app')
     ))
