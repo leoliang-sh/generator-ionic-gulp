@@ -139,7 +139,7 @@ gulp.task('json',function(){
 // copy fonts
 gulp.task('fonts', function() {
   return gulp
-    .src(['app/fonts/*.*', 'bower_components/ionic/release/fonts/*.*'])
+    .src(['app/fonts/*.*', 'bower_components/ionic/fonts/*.*'])
 
     .pipe(gulp.dest(path.join(targetDir, 'fonts')))
 
